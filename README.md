@@ -28,7 +28,7 @@ Our solution splits the generative process into two optimized modules, separatin
 
 ```mermaid
 flowchart TD
-    subgraph VAE Training (Dimensionality Reduction)
+    subgraph VAE_Training ["VAE Training (Dimensionality Reduction)"]
         Image[Raw Images 28x28] --> Encoder[Convolutional Encoder]
         Encoder --> LatentParams[mu, log_var]
         LatentParams --> TanhConstraint[Tanh Constraint * 4.0]
@@ -37,7 +37,7 @@ flowchart TD
         Decoder --> ReconImage[Reconstructed Images 28x28]
     end
     
-    subgraph Flow Matching Training (Latent Space Density Estimation)
+    subgraph Flow_Matching ["Flow Matching Training (Latent Space Density Estimation)"]
         z0[Gaussian Noise z0 dim=12] --> Interp[Linear Interpolation xt = t*z1 + 1-t*z0]
         LatentSample --> Interp
         Interp --> FlowModel[MLP Vector Field Model]
@@ -47,7 +47,7 @@ flowchart TD
         PredVelocity --> Loss
     end
     
-    subgraph Inference & Generation (Euler Integration)
+    subgraph Inference_Gen ["Inference & Generation (Euler Integration)"]
         StartNoise[z0 ~ N 0, I dim=12] --> EulerIntegrator[Forward Euler ODE Solver 100 Steps]
         TrainedFlowModel[Trained Flow Model] --> EulerIntegrator
         EulerIntegrator --> GeneratedLatent[Generated Latent z1]
@@ -55,9 +55,9 @@ flowchart TD
         VDecoder --> SynthImage[High-Fidelity Synthetic Image 28x28]
     end
     
-    style VAE Training fill:#f9f9f9,stroke:#333,stroke-width:1px
-    style Flow Matching Training fill:#f5faff,stroke:#0052cc,stroke-width:1px
-    style Inference & Generation fill:#f6fff5,stroke:#2eb82e,stroke-width:1px
+    style VAE_Training fill:#f9f9f9,stroke:#333,stroke-width:1px
+    style Flow_Matching fill:#f5faff,stroke:#0052cc,stroke-width:1px
+    style Inference_Gen fill:#f6fff5,stroke:#2eb82e,stroke-width:1px
 ```
 
 ### 1. Convolutional VAE (The Compressor)
